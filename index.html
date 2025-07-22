@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>QR Menü Sistemi - 3’lü Grid</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #158b8b;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px;
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    h2 {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 10px 0 20px 0;
+      color: white;
+      user-select: none;
+      cursor: default;
+    }
+
+    #anaMenu h2 {
+      margin: 30px 0 10px 0;
+      color: white;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    #anaMenu h2:hover {
+      color: #ffee58;
+    }
+
+    .category {
+      margin: 0 auto 40px;
+      width: 320px;
+      cursor: pointer;
+      transition: transform 0.2s;
+      text-align: center;
+      border: 4px solid white;
+      border-radius: 15px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.1);
+      box-shadow: 0 0 10px rgba(255,255,255,0.3);
+    }
+
+    .category:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #ffee58;
+      border-color: #ffee58;
+    }
+
+    .category img {
+      width: 100%;
+      display: block;
+      border-radius: 15px;
+      transition: transform 0.3s ease;
+    }
+
+    .category:hover img {
+      transform: scale(1.1);
+    }
+
+    .menu-section {
+      max-width: 1100px; /* 3 x 320 + boşluklar */
+      margin: 0 auto 40px auto;
+      background: #fff;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      overflow: hidden;
+
+      max-height: 0;
+      opacity: 0;
+      transition: max-height 0.6s ease, opacity 0.6s ease;
+    }
+
+    .menu-section.active {
+      max-height: 2000px;
+      opacity: 1;
+    }
+
+    /* 3’lü grid yapısı */
+    .menu-items {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+      justify-items: center;
+    }
+
+    /* Küçük ekranlarda 1’li ya da 2’li grid */
+    @media (max-width: 900px) {
+      .menu-items {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .menu-items {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .menu-item {
+      width: 320px;
+      background-color: #158b8b;
+      color: white;
+      border-radius: 12px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      padding: 12px;
+      text-align: center;
+      transition: background-color 0.3s ease;
+      cursor: default;
+      overflow: hidden;
+    }
+
+    .menu-item:hover {
+      background-color: #13a2a2;
+    }
+
+    .menu-item img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      display: block;
+    }
+
+    .price {
+      font-weight: bold;
+      font-size: 18px;
+      margin-top: 4px;
+      color: #ffee58;
+      user-select: none;
+    }
+
+    .back-btn {
+      margin-top: 25px;
+      padding: 12px 25px;
+      font-size: 17px;
+      background-color: #333;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+
+    .back-btn:hover {
+      background-color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="anaMenu">
+    <h2 onclick="showMenu('icecekler')">İÇECEKLER</h2>
+    <div class="category" onclick="showMenu('icecekler')">
+      <img src="https://images.pexels.com/photos/50593/coca-cola-cold-drink-soft-drink-coke-50593.jpeg?_gl=1*u7pjbg*_ga*MTg3NjE0OTYzMC4xNzUzMTgzMzc4*_ga_8JE65Q40S6*czE3NTMxODMzNzckbzEkZzEkdDE3NTMxODM1MjMkajMxJGwwJGgw" alt="İçecekler" />
+    </div>
+
+    <h2 onclick="showMenu('yemekler')">YEMEKLER</h2>
+    <div class="category" onclick="showMenu('yemekler')">
+      <img src="https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?_gl=1*cfr8rk*_ga*MTg3NjE0OTYzMC4xNzUzMTgzMzc4*_ga_8JE65Q40S6*czE3NTMxODMzNzckbzEkZzEkdDE3NTMxODM1NzIkajUxJGwwJGgw" alt="Yemekler" />
+    </div>
+
+    <h2 onclick="showMenu('tatlilar')">TATLILAR</h2>
+    <div class="category" onclick="showMenu('tatlilar')">
+      <img src="https://images.pexels.com/photos/2373520/pexels-photo-2373520.jpeg?_gl=1*tkdr58*_ga*MTg3NjE0OTYzMC4xNzUzMTgzMzc4*_ga_8JE65Q40S6*czE3NTMxODMzNzckbzEkZzEkdDE3NTMxODM2MDYkajE3JGwwJGgw" alt="Tatlılar" />
+    </div>
+  </div>
+
+  <div id="icecekler" class="menu-section">
+    <h2>İçecekler</h2>
+    <div class="menu-items">
+      <div class="menu-item">
+        <img src="https://images.pexels.com/photos/2983100/pexels-photo-2983100.jpeg?_gl=1*ak7r7y*_ga*MTg3NjE0OTYzMC4xNzUzMTgzMzc4*_ga_8JE65Q40S6*czE3NTMxODMzNzckbzEkZzEkdDE3NTMxODM3MzgkajM1JGwwJGgw" alt="Kola" />
+        <div class="price">Kola - 25₺</div>
+      </div>
+      <div class="menu-item">
+        <img src="https://media.istockphoto.com/id/2190263371/tr/foto%C4%9Fraf/glass-cup-of-turkish-traditional-drink-ayran-kefir-or-buttermilk-made-from-yogurt-healthy.webp?s=2048x2048&w=is&k=20&c=I21RIvWxnwcnHLH66Sk61M8kwVV1i-2clj5Dk4wygsQ=" alt="Ayran" />
+        <div class="price">Ayran - 15₺</div>
+      </div>
+      <div class="menu-item">
+        <img src="https://images.unsplash.com/photo-1624517452488-04869289c4ca?q=80&w=2003&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Fanta" />
+        <div class="price">Fanta - 22₺</div>
+      </div>
+      <div class="menu-item">
+        <img src="https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/57028/uploads/urunresimleri/buyuk/doganay-acisiz-salgam-suyu-1-litre-12--e3b106.png" alt="Salgam" />
+        <div class="price">Salgam - 30₺</div>
+      </div>
+      <div class="menu-item">
+        <img src="https://images.migrosone.com/sanalmarket/product/08030000/08030000_1-881eaf-1650x1650.png" alt="Sprite" />
+        <div class="price">Sprite - 35₺</div>
+      </div>
+      <div class="menu-item">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMd30Ctje8TAy_7exj2n2HcZ2CEWMg2fyN0A&s" alt="lipton" />
+        <div class="price">lipton - 35₺</div>
+    </div>
+     <div class="menu-item">
+        <img src="https://w7.pngwing.com/pngs/287/874/png-transparent-fizzy-drinks-uluda%C4%9F-gazoz-iced-tea-uluda%C4%9F-gazoz-iced-tea-aluminum-can-turkish-cuisine-soft-drink.png" alt="Gazoz" />
+        <div class="price">Gazoz - 15₺</div>
+    </div>
+     <div class="menu-item">
+        <img src="https://www.mismarsanalmarket.com/UserFiles/Fotograflar/org/137-8690504525011-jpg-8690504525011.jpg" alt="camlıca" />
+        <div class="price">Camlıca - 15₺</div>
+    </div>
+    
+    <button class="back-btn" onclick="goBack()">↩ Geri Dön</button>
+  </div>
+</div>
+  <div id="yemekler" class="menu-section">
+    <h2>Yemekler</h2>
+    <div class="menu-items">
+      <div class="menu-item">
+        <img src="https://e7.pngegg.com/pngimages/215/164/png-clipart-kebab-kebab-thumbnail.png" alt="kebap" />
+        <div class="price">kebap - 150₺</div>
+      </div>
+      <div class="menu-item">
+        <img src="https://www.cdnaws.com/i/hancigida/QvGYHLqi2qQZW3D2QvGYHPsSdwLYQ1DrZW3D2ZW3D2/images/blog/tavuklu-pilav-47.png" alt="Tavuk pilav" />
+        <div class="price">tavuk pılav - 110₺</div>
+      </div>
+      <div class="menu-item">
+        <img src="https://i.pinimg.com/736x/91/31/c7/9131c729d733bd3ac5eb73b87f13ab12.jpg" alt="Burger" />
+        <div class="price">Burger - 55₺</div>
+      </div>
+       <div class="menu-item">
+        <img src="https://static.vecteezy.com/system/resources/thumbnails/045/383/391/small_2x/a-cheesy-delicious-pizza-with-tasty-pepperoni-on-a-transparent-background-png.png" alt="Pızza" />
+        <div class="price">Pızza - 250₺</div>
+      </div>
+       <div class="menu-item">
+        <img src="https://www.ustadonerci.com/media/products/yogurtlu_et_doner_b-2017.png" alt="Iskender" />
+        <div class="price">Burger - 350₺</div>
+      </div>
+       <div class="menu-item">
+        <img src="https://w7.pngwing.com/pngs/543/85/png-transparent-turkish-cuisine-breakfast-manti-recipe-italian-cuisine-breakfast-soup-food-cafe-thumbnail.png" alt="mantı" />
+        <div class="price">mantı - 120₺</div>
+      </div>
+       <div class="menu-item">
+        <img src="https://w7.pngwing.com/pngs/1016/535/png-transparent-chicken-doner-kebab-durum-shawarma-ayran-chicken-food-animals-recipe-thumbnail.png" alt="durum" />
+        <div class="price">Burger - 75₺</div>
+      </div>
+       <div class="menu-item">
+        <img src="https://w7.pngwing.com/pngs/716/351/png-transparent-turkish-cuisine-doner-kebab-pide-lahmajoun-others-food-recipe-cuisine-thumbnail.png" alt="Lahmacun" />
+        <div class="price">Lahmacun - 55₺</div>
+      </div>
+       
+
+    </div>
+    <button class="back-btn" onclick="goBack()">↩ Geri Dön</button>
+  </div>
+
+  <div id="tatlilar" class="menu-section">
+    <h2>Tatlılar</h2>
+    <div class="menu-items">
+      <div class="menu-item">
+        <img src="https://www.popeyes.com.tr/cmsfiles/products/sufle.png?v=315" alt="Sufle" />
+        <div class="price">Sufle - 40₺</div>
+      </div>
+      <div class="menu-item">
+        <img src="https://e7.pngegg.com/pngimages/54/437/png-clipart-baklava-turkish-cuisine-kebab-dessert-pistachio-baklava-havuc-dilimi-baklava-turkish-cuisine-thumbnail.png" alt="Baklava" />
+        <div class="price">Baklava - 50₺</div>
+      </div>
+      <div class="menu-item">
+        <img src="https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTEyL3AtMzA1LXJvYjc4MjAtamotZXllLWpvYjE0NjEucG5n.png" alt="Cheesecake" />
+        <div class="price">Cheesecake - 45₺</div>
+      </div>
+      <div class="menu-item">
+        <img src="https://cdn.shopify.com/s/files/1/1259/6441/files/trilece-tatlisi-tarifi.jpg?v=1598011389" alt="Trılece" />
+        <div class="price">Trılece- 120₺</div>
+      </div>
+      <div class="menu-item">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8oJbuieOxQ63-sYNKUcV8sSI8i2JOfTi3GQ&s" alt="kunefe" />
+        <div class="price">kunefe - 130₺</div>
+      </div>
+      <div class="menu-item">
+        <img src="https://w7.pngwing.com/pngs/676/418/png-transparent-tulumba-dessert-aldimashqi-sharbat-turkish-cuisine-cake-food-oil-cake-thumbnail.png" alt="lokma" />
+        <div class="price">lokma - 60₺</div>
+      </div>
+      <div class="menu-item">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcST2jze1shTFCtm5EPinoNcAzOwW0T5lOT_Mw&s" alt="Yas pasta" />
+        <div class="price">Yas Pasta - 350₺</div>
+      </div>
+      <div class="menu-item">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAbdoQuoZaBzkmYEzGWExUoO43q_G2WN3Ifg&s" alt="Sutlac" />
+        <div class="price">Sutlac - 120₺</div>
+      </div>
+    </div>
+    <button class="back-btn" onclick="goBack()">↩ Geri Dön</button>
+  </div>
+
+  <script>
+    function showMenu(id) {
+      document.getElementById('anaMenu').style.display = 'none';
+      document.querySelectorAll('.menu-section').forEach(sec => sec.classList.remove('active'));
+      const menu = document.getElementById(id);
+      menu.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function goBack() {
+      document.querySelectorAll('.menu-section').forEach(sec => sec.classList.remove('active'));
+      document.getElementById('anaMenu').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
